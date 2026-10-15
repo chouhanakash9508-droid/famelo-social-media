@@ -52,7 +52,8 @@ export function AuthProvider({ children }) {
               following: 0,
               posts: 0,
               createdAt: new Date().toISOString(),
-              isVerified: false
+              isVerified: false,
+              is_admin: false
             };
             
             await setDoc(doc(db, 'users', firebaseUser.uid), userData);
@@ -114,7 +115,8 @@ export function AuthProvider({ children }) {
         following: 0,
         posts: 0,
         createdAt: new Date().toISOString(),
-        isVerified: false
+        isVerified: false,
+        is_admin: false
       };
 
       console.log('Creating user document in Firestore...');
@@ -282,6 +284,8 @@ export function AuthProvider({ children }) {
     user,
     loading,
     initializing,
+    isAuthenticated: !!user,
+    isLoading: loading,
     signup,
     login,
     logout,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Search, PlusSquare, Play, User, Heart, MessageCircle } from 'lucide-react';
+import { Home, Search, PlusSquare, Play, User, Heart, MessageCircle, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -35,6 +35,12 @@ const BottomNavigation = () => {
       path: '/reels', 
       label: 'Reels',
       activeIcon: Play
+    },
+    { 
+      icon: ShoppingBag, 
+      path: '/cart', 
+      label: 'Cart',
+      activeIcon: ShoppingBag
     },
     { 
       icon: User, 

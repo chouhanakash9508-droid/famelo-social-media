@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Heart, MessageCircle, Sun, Moon } from 'lucide-react';
+import { Heart, MessageCircle, Sun, Moon, HelpCircle, ShoppingBag, Megaphone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BottomNavigation from '../components/BottomNavigation';
 
@@ -66,6 +66,33 @@ const MainLayout = ({ children }) => {
                   location.pathname.startsWith('/messages') 
                     ? (isDark ? 'fill-white text-white' : 'fill-black text-black')
                     : (isDark ? 'text-white' : 'text-black')
+                }`} />
+              </motion.div>
+            </Link>
+            <Link to="/instagram-help">
+              <motion.div whileTap={{ scale: 0.9 }} className="p-2">
+                <HelpCircle className={`w-6 h-6 transition-colors ${
+                  location.pathname.startsWith('/instagram-help') 
+                    ? (isDark ? 'text-purple-400' : 'text-purple-600')
+                    : (isDark ? 'text-gray-400' : 'text-gray-600')
+                }`} />
+              </motion.div>
+            </Link>
+            <Link to="/advertise">
+              <motion.div whileTap={{ scale: 0.9 }} className="p-2">
+<Megaphone className={`w-6 h-6 transition-colors ${
+                location.pathname.startsWith('/advertise') || location.pathname.startsWith('/business-dashboard') || location.pathname.startsWith('/create-campaign')
+                  ? (isDark ? 'text-yellow-400' : 'text-yellow-600')
+                  : (isDark ? 'text-gray-400' : 'text-gray-600')
+              }`} />
+              </motion.div>
+            </Link>
+            <Link to="/cart">
+              <motion.div whileTap={{ scale: 0.9 }} className="p-2">
+                <ShoppingBag className={`w-6 h-6 transition-colors ${
+                  location.pathname.startsWith('/cart') || location.pathname.startsWith('/checkout') || location.pathname.startsWith('/orders')
+                    ? (isDark ? 'text-purple-400' : 'text-purple-600')
+                    : (isDark ? 'text-gray-400' : 'text-gray-600')
                 }`} />
               </motion.div>
             </Link>

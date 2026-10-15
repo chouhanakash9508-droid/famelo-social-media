@@ -63,5 +63,50 @@ export const reelsService = {
       console.error('Error toggling save:', error);
       throw error;
     }
+  },
+
+  // Admin: Create promo reel
+  async createPromoReel(file, caption = '', topic = '', cta = '', linkedFeature = '', priority = 0) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('caption', caption);
+    formData.append('topic', topic);
+    formData.append('cta', cta);
+    formData.append('linked_feature', linkedFeature);
+    formData.append('priority', priority);
+    const response = await api.post('/api/admin/promo-reels', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  // Admin: List promo reels
+  async getPromoReels() {
+    const response = await api.get('/api/admin/promo-reels');
+    return response.data;
+  },
+
+  // Admin: Update promo reel
+  async updatePromoReel(reelId, data) {
+    const response = await api.put(`/api/admin/promo-reels/${reelId}`, data);
+    return response.data;
+  },
+
+  // Admin: Delete promo reel
+  async deletePromoReel(reelId) {
+    const response = await api.delete(`/api/admin/promo-reels/${reelId}`);
+    return response.data;
+  },
+
+  // Admin: Get promo settings
+  async getPromoSettings() {
+    const response = await api.get('/api/admin/settings/promo-reels');
+    return response.data;
+  },
+
+  // Admin: Update promo settings
+  async updatePromoSettings(data) {
+    const response = await api.put('/api/admin/settings/promo-reels', data);
+    return response.data;
   }
 };

@@ -1,0 +1,3 @@
+@echo off
+echo Testing signup fix...
+echo.\necho 1. Firestore rules have been updated and deployed\necho 2. Added detailed logging to AuthContext\necho 3. Firebase project is set to: famelosocialmedia\necho.\necho Please try signing up again and check the browser console for detailed logs.\necho If you still get permission errors, please:\necho - Check Firebase Console Security Rules\necho - Ensure Authentication is enabled\necho - Verify Firestore database exists\necho.\npause

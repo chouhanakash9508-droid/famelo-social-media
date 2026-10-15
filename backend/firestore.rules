@@ -1,0 +1,112 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read/write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null; // Allow reading other users for profiles
+      allow create: if request.auth != null && request.auth.uid == userId; // Allow user creation during signup
+    }
+    
+    // Username reservations - allow authenticated users to create/read
+    match /usernames/{username} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.uid;
+    }
+    
+    // Posts are readable by authenticated users, writable by owner
+    match /posts/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Comments are readable by authenticated users, writable by owner
+    match /comments/{commentId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Likes are readable by authenticated users, writable by owner
+    match /likes/{likeId} {
+      allow read: if request.auth != null;
+      allow create, delete: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+    }
+    
+    // Comment likes
+    match /comment_likes/{likeId} {
+      allow read: if request.auth != null;
+      allow create, delete: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+    }
+    
+    // Follows are readable by authenticated users, writable by follower
+    match /follows/{followId} {
+      allow read: if request.auth != null;
+      allow create, delete: if request.auth != null && 
+        request.auth.uid == request.resource.data.follower_id;
+    }
+    
+    // Stories are readable by authenticated users, writable by owner
+    match /stories/{storyId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Reels are readable by authenticated users, writable by owner
+    match /reels/{reelId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Promo reel views - users can track their own views
+    match /promo_reel_views/{viewId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Settings - readable by authenticated users
+    match /settings/{settingId} {
+      allow read: if request.auth != null;
+    }
+    
+    // Notifications are readable/writable by recipient only
+    match /notifications/{notificationId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+    
+    // Messages and chats - participants only
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid in resource.data.participants;
+    }
+    
+    match /messages/{messageId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.sender_id;
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.sender_id;
+    }
+    
+    // Saves are readable/writable by owner only
+    match /saves/{saveId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.user_id;
+    }
+  }
+}

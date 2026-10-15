@@ -1,0 +1,51 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Profile pictures - users can upload their own
+    match /profile_pictures/{userId}/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Posts - users can upload their own
+    match /posts/{userId}/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 10 * 1024 * 1024 && // 10MB limit
+        (request.resource.contentType.matches('image/.*') ||
+         request.resource.contentType.matches('video/.*'));
+    }
+    
+    // Stories - users can upload their own
+    match /stories/{userId}/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 10 * 1024 * 1024 && // 10MB limit
+        (request.resource.contentType.matches('image/.*') ||
+         request.resource.contentType.matches('video/.*'));
+    }
+    
+    // Reels - users can upload their own
+    match /reels/{userId}/{allPaths=**} {
+      allow read: if true; // Public read
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 50 * 1024 * 1024 && // 50MB limit for videos
+        request.resource.contentType.matches('video/.*');
+    }
+    
+    // Messages - participants can upload
+    match /messages/{userId}/{allPaths=**} {
+      allow read: if request.auth != null; // Authenticated read
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 10 * 1024 * 1024 && // 10MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+  }
+}

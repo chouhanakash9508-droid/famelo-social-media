@@ -18,6 +18,25 @@ import Reels from './pages/Reels';
 import Profile from './pages/Profile';
 import Activity from './pages/Activity';
 import Messages from './pages/Messages';
+import InstagramHelp from './pages/InstagramHelp';
+import InstagramHelpDetail from './pages/InstagramHelpDetail';
+import InstagramHelpResult from './pages/InstagramHelpResult';
+import Advertise from './pages/Advertise';
+import BusinessDashboard from './pages/BusinessDashboard';
+import CreateCampaign from './pages/CreateCampaign';
+import CampaignDetail from './pages/CampaignDetail';
+import AdminAds from './pages/AdminAds';
+import AdminPromoReels from './pages/AdminPromoReels';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Orders from './pages/Orders';
+import OrderDetail from './pages/OrderDetail';
+import SellerDashboard from './pages/SellerDashboard';
+import SellerProducts from './pages/SellerProducts';
+import SellerOrders from './pages/SellerOrders';
+import CreateProduct from './pages/CreateProduct';
+import AdminCommerce from './pages/AdminCommerce';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import './App.css';
@@ -136,6 +155,165 @@ function AnimatedRoutes() {
                 <Messages />
               </PageTransition>
             </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/instagram-help" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <InstagramHelp />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/instagram-help/:problemId" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <InstagramHelpDetail />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/instagram-help/:problemId/result" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <InstagramHelpResult />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/advertise" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <Advertise />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/business-dashboard" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <BusinessDashboard />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/create-campaign" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <CreateCampaign />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/campaigns/:campaignId" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <CampaignDetail />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/ads" element={
+          <ProtectedRoute>
+            <AdminAds />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/promo-reels" element={
+          <ProtectedRoute>
+            <AdminPromoReels />
+          </ProtectedRoute>
+        } />
+        <Route path="/product/:productId" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <ProductDetail />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/cart" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <Cart />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/checkout" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <Checkout />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/orders" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <Orders />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/orders/:orderId" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <OrderDetail />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/seller-dashboard" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <SellerDashboard />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/seller-products" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <SellerProducts />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/seller-orders" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <SellerOrders />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/create-product" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PageTransition>
+                <CreateProduct />
+              </PageTransition>
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/commerce" element={
+          <ProtectedRoute>
+            <AdminCommerce />
           </ProtectedRoute>
         } />
         <Route path="/privacy" element={

@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Volume2, VolumeX, Play } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { reelsService } from '../services/reelsService';
+import ReelProductOverlay from '../components/ReelProductOverlay';
+import commerceService from '../services/commerceService';
 
 const Reels = () => {
   const [reels, setReels] = useState([]);
@@ -10,6 +12,7 @@ const Reels = () => {
   const [muted, setMuted] = useState(true);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [reelProducts, setReelProducts] = useState({});
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartY = useRef(0);
@@ -23,18 +26,25 @@ const Reels = () => {
     try {
       setLoading(true);
       const response = await reelsService.getReels(1, 10);
-      setReels(response.reels || []);
+      const loadedReels = response.reels || [];
+      setReels(loadedReels);
       setHasMore(response.has_more);
+      for (const reel of loadedReels) {
+        if (reel.product_id) {
+          try {
+            const data = await commerceService.getProduct(reel.product_id);
+            setReelProducts(prev => ({ ...prev, [reel.id]: data.product }));
+          } catch (e) {
+            console.error('Failed to load reel product', e);
+          }
+        }
+      }
     } catch (error) {
       console.error('Error loading reels:', error);
-      // Fallback to mock data
       const mockReels = [
         {
           id: '1',
-          user: {
-            username: 'alice_wonder',
-            photoURL: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
-          },
+          user: { username: 'alice_wonder', photoURL: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face' },
           video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
           caption: 'Amazing sunset vibes 🌅 #sunset #nature #reels',
           likes_count: 1234,
@@ -45,10 +55,7 @@ const Reels = () => {
         },
         {
           id: '2',
-          user: {
-            username: 'john_doe',
-            photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
-          },
+          user: { username: 'john_doe', photoURL: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face' },
           video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
           caption: 'Dancing in the rain ☔️ #dance #rain #mood #viral',
           likes_count: 2567,
@@ -125,6 +132,14 @@ const Reels = () => {
     } catch (error) {
       console.error('Error saving reel:', error);
     }
+  };
+
+  const handleProductView = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const handleProductBuy = (productId) => {
+    navigate(`/checkout`, { state: { productId } });
   };
 
   const toggleMute = () => {
@@ -285,6 +300,11 @@ const Reels = () => {
                 <span className="font-bold text-white text-base">
                   @{reels[currentIndex]?.user?.username}
                 </span>
+                {reels[currentIndex]?.officialFamelo && (
+                  <span className="ml-1.5 text-[10px] bg-yellow-500 text-black px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide">
+                    Official
+                  </span>
+                )}
               </div>
               
               {reels[currentIndex]?.caption && (
@@ -300,7 +320,15 @@ const Reels = () => {
                 </div>
                 <span className="text-white text-xs">Original audio</span>
               </div>
-            </div>
+              </div>
+
+            {reelProducts[reels[currentIndex]?.id] && (
+              <ReelProductOverlay
+                product={reelProducts[reels[currentIndex].id]}
+                onViewProduct={() => handleProductView(reels[currentIndex].product_id)}
+                onBuyNow={() => handleProductBuy(reels[currentIndex].product_id)}
+              />
+            )}
 
             {/* Mute Button */}
             <motion.button

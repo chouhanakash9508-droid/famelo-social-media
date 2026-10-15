@@ -1,6 +1,17 @@
 import api from './api';
 
 export const userService = {
+  // Get my profile
+  async getMyProfile() {
+    try {
+      const response = await api.get('/api/users/me');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching my profile:', error);
+      throw error;
+    }
+  },
+
   // Get user profile by username
   async getUserProfile(username) {
     try {

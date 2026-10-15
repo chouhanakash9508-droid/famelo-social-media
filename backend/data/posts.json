@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "caption": "Beautiful sunset at the beach! 🌅 Perfect end to a perfect day. #sunset #beach #nature #photography",
+    "media_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=500&fit=crop",
+    "media_type": "image",
+    "author_id": 1,
+    "created_at": "2024-01-20T18:30:00Z",
+    "updated_at": "2024-01-20T18:30:00Z"
+  },
+  {
+    "id": 2,
+    "caption": "Coffee and coding session ☕💻 Building something amazing today! #coding #coffee #developer #productivity",
+    "media_url": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500&h=500&fit=crop",
+    "media_type": "image",
+    "author_id": 2,
+    "created_at": "2024-01-20T14:15:00Z",
+    "updated_at": "2024-01-20T14:15:00Z"
+  },
+  {
+    "id": 3,
+    "caption": "Morning workout complete! 💪 Remember, consistency is key to achieving your fitness goals. What's your workout plan for today? #fitness #motivation #workout #health",
+    "media_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=500&fit=crop",
+    "media_type": "image",
+    "author_id": 3,
+    "created_at": "2024-01-20T07:45:00Z",
+    "updated_at": "2024-01-20T07:45:00Z"
+  },
+  {
+    "id": 4,
+    "caption": "Exploring the mountains today! 🏔️ Nature never fails to amaze me. The fresh air and stunning views are exactly what I needed. #hiking #mountains #adventure #nature",
+    "media_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=500&fit=crop",
+    "media_type": "image",
+    "author_id": 1,
+    "created_at": "2024-01-19T16:20:00Z",
+    "updated_at": "2024-01-19T16:20:00Z"
+  },
+  {
+    "id": 5,
+    "caption": "Late night coding session 🌙💻 Working on something exciting that I can't wait to share with you all! #coding #latenight #developer #passion",
+    "media_url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&h=500&fit=crop",
+    "media_type": "image",
+    "author_id": 2,
+    "created_at": "2024-01-19T23:30:00Z",
+    "updated_at": "2024-01-19T23:30:00Z"
+  }
+]

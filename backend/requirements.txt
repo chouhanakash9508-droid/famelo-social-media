@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+firebase-admin
+python-multipart
+pydantic
+python-jose[cryptography]
+websockets
+aiofiles
+python-dotenv
+Pillow
+requests
+gunicorn
+slowapi
+redis

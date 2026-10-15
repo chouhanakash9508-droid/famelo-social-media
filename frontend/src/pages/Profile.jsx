@@ -15,6 +15,7 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('posts');
   const [isFollowing, setIsFollowing] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -22,7 +23,7 @@ const Profile = () => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
 
-  const isOwnProfile = !username || username === currentUser?.displayName;
+  const isOwnProfile = !username || username === currentUser?.username;
 
   useEffect(() => {
     loadProfile();
@@ -31,24 +32,56 @@ const Profile = () => {
   const loadProfile = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      const targetUsername = username || currentUser?.displayName;
-      if (!targetUsername) return;
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
       
-      const profileData = await userService.getUserProfile(targetUsername);
-      setProfile(profileData);
-      setIsFollowing(profileData.is_following || false);
-      
-      // Load posts and reels
-      const [postsData, reelsData] = await Promise.all([
-        userService.getUserPosts(targetUsername, 'posts'),
-        userService.getUserPosts(targetUsername, 'reels')
-      ]);
-      
-      setPosts(postsData.posts || []);
-      setReels(reelsData.reels || []);
-    } catch (error) {
-      console.error('Error loading profile:', error);
+      if (isOwnProfile) {
+        try {
+          const profileData = await userService.getMyProfile();
+          setProfile(profileData);
+          setIsFollowing(false);
+          
+          const [postsData, reelsData] = await Promise.all([
+            userService.getUserPosts(profileData.username, 'posts'),
+            userService.getUserPosts(profileData.username, 'reels')
+          ]);
+          
+          setPosts(postsData.posts || []);
+          setReels(reelsData.reels || []);
+        } catch (ownError) {
+          console.error('Error loading own profile:', ownError);
+          setError('Unable to load your profile. Please try again.');
+          setProfile(null);
+        }
+      } else {
+        const targetUsername = username;
+        if (!targetUsername) {
+          setLoading(false);
+          return;
+        }
+        
+        try {
+          const profileData = await userService.getUserProfile(targetUsername);
+          setProfile(profileData);
+          setIsFollowing(profileData.is_following || false);
+          
+          const [postsData, reelsData] = await Promise.all([
+            userService.getUserPosts(targetUsername, 'posts'),
+            userService.getUserPosts(targetUsername, 'reels')
+          ]);
+          
+          setPosts(postsData.posts || []);
+          setReels(reelsData.reels || []);
+        } catch (otherError) {
+          console.error('Error loading user profile:', otherError);
+          setError('Unable to load this profile. Please try again.');
+          setProfile(null);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -125,6 +158,23 @@ const Profile = () => {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center px-4">
+          <h2 className="text-xl font-semibold text-white mb-2">Unable to load profile</h2>
+          <p className="text-gray-400 mb-4">{error}</p>
+          <button
+            onClick={loadProfile}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold px-6 py-2 rounded-lg"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -259,6 +309,17 @@ const Profile = () => {
               </motion.button>
             )}
           </div>
+
+          {isOwnProfile && (
+            <div className="flex items-center space-x-2 mt-3">
+              <button onClick={() => navigate('/orders')} className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs font-semibold py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                My Orders
+              </button>
+              <button onClick={() => navigate('/seller-dashboard')} className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold py-2 rounded-lg">
+                My Selling
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Bio */}

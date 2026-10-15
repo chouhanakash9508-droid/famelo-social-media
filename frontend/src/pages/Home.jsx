@@ -4,6 +4,8 @@ import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from 'lucide-rea
 import { useInView } from 'react-intersection-observer';
 import { useAuth } from '../context/AuthContext';
 import Stories from '../components/Stories';
+import SponsoredCard from '../components/SponsoredCard';
+import adService from '../services/adService';
 
 const PostSkeleton = () => (
   <div className="bg-black border-b border-gray-800 animate-pulse">
@@ -180,6 +182,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [ads, setAds] = useState([]);
   const { user } = useAuth();
   const { ref, inView } = useInView({ threshold: 0 });
 
@@ -273,6 +276,27 @@ const Home = () => {
     console.log('Open comments for post:', postId);
   };
 
+  useEffect(() => {
+    loadAds();
+  }, []);
+
+  const loadAds = async () => {
+    try {
+      const data = await adService.getAdsFeed();
+      setAds(data.ads || []);
+    } catch (e) {
+      console.error('Failed to load ads', e);
+    }
+  };
+
+  const handleAdClick = async (adId) => {
+    try {
+      await adService.trackAdClick(adId);
+    } catch (e) {
+      console.error('Failed to track ad click', e);
+    }
+  };
+
   if (loading && posts.length === 0) {
     return (
       <div className="min-h-screen bg-black">
@@ -295,6 +319,9 @@ const Home = () => {
           >
             <PostCard post={post} onLike={handleLike} onSave={handleSave} onComment={handleComment} />
           </motion.div>
+        ))}
+        {ads.map((ad, idx) => (
+          <SponsoredCard key={ad.id} ad={ad} onAdClick={handleAdClick} />
         ))}
 
         {hasMore && (

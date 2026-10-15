@@ -14,6 +14,9 @@ const CreatePost = () => {
   const [previewUrl, setPreviewUrl] = useState('');
   const [caption, setCaption] = useState('');
   const [location, setLocation] = useState('');
+  const [hasProduct, setHasProduct] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState('');
+  const [products, setProducts] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
@@ -64,7 +67,8 @@ const CreatePost = () => {
         file: croppedFile,
         caption: caption.trim(),
         location: location.trim(),
-        user: user
+        user: user,
+        product_id: hasProduct ? selectedProductId : null,
       };
 
       await uploadPost(postData, (progress) => {
@@ -81,6 +85,22 @@ const CreatePost = () => {
       setUploadProgress(0);
     }
   };
+
+  const loadProducts = async () => {
+    try {
+      const { commerceService } = await import('../services/commerceService');
+      const data = await commerceService.getMyProducts();
+      setProducts(data.products || []);
+    } catch (e) {
+      console.error('Failed to load products', e);
+    }
+  };
+
+  useEffect(() => {
+    if (hasProduct) {
+      loadProducts();
+    }
+  }, [hasProduct]);
 
   const handleClose = () => {
     if (uploading) return;
@@ -256,19 +276,43 @@ const CreatePost = () => {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Add location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="flex-1 bg-transparent text-white placeholder-gray-400 border-b border-gray-700 pb-2 focus:outline-none focus:border-gray-500 transition-colors text-sm"
-                    />
-                  </div>
+                   <div className="space-y-4">
+                   <div className="flex items-center space-x-3">
+                     <MapPin className="w-5 h-5 text-gray-400" />
+                     <input
+                       type="text"
+                       placeholder="Add location"
+                       value={location}
+                       onChange={(e) => setLocation(e.target.value)}
+                       className="flex-1 bg-transparent text-white placeholder-gray-400 border-b border-gray-700 pb-2 focus:outline-none focus:border-gray-500 transition-colors text-sm"
+                     />
+                   </div>
 
-                  {previewUrl && (
+                   <div className="flex items-center space-x-3">
+                     <input
+                       type="checkbox"
+                       id="hasProduct"
+                       checked={hasProduct}
+                       onChange={(e) => setHasProduct(e.target.checked)}
+                       className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-purple-500 focus:ring-purple-500"
+                     />
+                     <label htmlFor="hasProduct" className="text-sm text-gray-300">This post contains a product for sale</label>
+                   </div>
+
+                   {hasProduct && products.length > 0 && (
+                     <select
+                       value={selectedProductId}
+                       onChange={(e) => setSelectedProductId(e.target.value)}
+                       className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                     >
+                       <option value="">Select product</option>
+                       {products.map((p) => (
+                         <option key={p.id} value={p.id}>{p.name} - ₹{p.price_inr}</option>
+                       ))}
+                     </select>
+                   )}
+
+                   {previewUrl && (
                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800">
                       {selectedFile?.type.startsWith('video/') ? (
                         <video
